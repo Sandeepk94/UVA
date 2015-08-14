@@ -1,0 +1,55 @@
+#include<bits/stdc++.h>
+#define ll long long
+#define MOD 100000007
+#define fors(i,n) for(int i=0;i<(n);i++)
+#define fr(i,a,n) for(int i=(a);i<=(n);i++)
+#define s(n) scanf("%d",&(n))
+#define sl(n) scanf("%lld",&(n))
+#define pb push_back
+#define v vector
+using namespace std;
+string a,b;
+map<string,int> m;
+int parent[200005];
+int size[200005];
+int find(int u)
+{
+   if(parent[u]!=u)
+    parent[u]=find(parent[u]);
+   
+   return parent[u];
+}
+void merge(int p,int q)
+{
+	p=find(p);
+	q=find(q);
+	if(p==q)return;
+	else
+	{
+		if(size[p]>size[q])swap(p,q);
+		size[q]+=size[p];
+		parent[p]=q;
+	}
+}
+
+int main() {
+	int t,n;s(t);
+	while(t--)
+	{
+		s(n);
+		int counter=0;
+		fr(i,1,n)
+		{
+		cin>>a>>b;
+		if(m[a]==0)m[a]=++counter,parent[counter]=counter,size[counter]=1;
+		if(m[b]==0)m[b]=++counter,parent[counter]=counter,size[counter]=1;
+		merge(m[a],m[b]);
+		int ans=max(size[find(m[a])],size[find(m[b])]);
+		cout<<ans<<endl;
+		}
+		m.clear();
+		fr(i,0,counter)size[i]=0,parent[i]=0;
+	}
+	
+	return 0;
+}
