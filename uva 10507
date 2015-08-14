@@ -1,0 +1,65 @@
+#include <iostream>
+#include<bits/stdc++.h>
+#define u uint64_t
+#define ll long long
+#define MOD 100000007
+#define fors(i,n) for(int i=0;i<(n);i++)
+#define fr(i,a,n) for(int i=(a);i<=(n);i++)
+#define s(n) scanf("%d",&(n))
+#define sl(n) scanf("%lld",&(n))
+#define pb push_back
+#define v vector
+using namespace std;
+v<int> g[30];
+int vis[30];
+int in[30];
+string a;
+int main() {
+	
+	int n,m;
+	while(cin>>n)
+	{
+		s(m);
+		cin>>a;
+	    queue<int> q;
+		q.push(a[0]-'A');
+		q.push(a[1]-'A');
+		q.push(a[2]-'A');
+		q.push(-1);
+		fr(i,0,29)in[i]=3;
+		in[a[0]-'A']=in[a[1]-'A']=in[a[2]-'A']=0;
+		vis[a[0]-'A']=vis[a[1]-'A']=vis[a[2]-'A']=1;
+		fr(i,1,m)
+		{
+			cin>>a;
+			g[a[0]-'A'].pb(a[1]-'A');
+			g[a[1]-'A'].pb(a[0]-'A');
+		}
+		int y=0;
+		int awaken=0;
+		while(!q.empty())
+		{
+			int s=q.front();
+			q.pop();
+			if(q.empty())break;
+			
+			if(s==-1){q.push(-1);y++;continue;} //a level seperater to mark all parts woken in a single year
+			if(s!=-1)awaken++;// count all awaken parts
+			for(int i=0;i<g[s].size();i++)
+			 {
+			 	int v=g[s][i];
+			 	if(vis[v])continue;
+			 	in[v]--;
+			 	if(in[v]==0)vis[v]=1,q.push(v);
+			 }
+		}
+	    if(awaken==n)printf("WAKE UP IN, %d, YEARS\n",y); 
+		else printf("THIS BRAIN NEVER WAKES UP\n");
+		fr(i,0,29)vis[i]=in[i]=0,g[i].clear();
+		
+		getchar();
+		
+	}
+	
+	return 0;
+}
