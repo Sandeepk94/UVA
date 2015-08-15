@@ -1,0 +1,73 @@
+#include<bits/stdc++.h>
+#define ll long long
+#define MOD 100000007
+#define fors(i,n) for(int i=0;i<(n);i++)
+#define fr(i,a,n) for(int i=(a);i<=(n);i++)
+#define s(n) scanf("%d",&(n))
+#define sl(n) scanf("%lld",&(n))
+#define pb push_back
+#define v vector
+using namespace std;
+int a[200005];
+int cnt[200005];
+int st[200005];
+int tree[400009];
+void build_tree(int node,int l,int r)
+{
+   if(l==r)
+   {
+   	tree[node]=cnt[a[l]];
+   	return;
+   }
+   build_tree(2*node+1,l,(l+r)/2);
+   build_tree(2*node+2,(l+r)/2+1,r);
+   tree[node]=max(tree[2*node+1],tree[2*node+2]);
+}
+int query(int node,int s,int e,int l,int r)
+{
+	if(s>r || e<l)return -1;
+	if(s>=l && e<=r)return tree[node];
+	int left=query(2*node+1,s,(s+e)/2,l,r);
+	int right=query(2*node+2,(s+e)/2+1,e,l,r);
+	return max(left,right);
+}
+int main() {
+	int n,q,l,r;
+	while(1)
+	{
+		fr(i,0,200000)cnt[i]=0,a[i]=0,st[i]=0,tree[i]=tree[2*i]=0;
+		s(n);if(n==0)break;
+		s(q);
+		fr(i,0,n-1)
+		{
+			s(a[i]);
+			a[i]+=100000;
+			if(cnt[a[i]]==0)st[a[i]]=i;
+			cnt[a[i]]++;
+		}
+		build_tree(0,0,n-1);
+		//fr(i,0,10)cout<<cnt[a[i]]<<" ";
+		fr(i,1,q)
+		{
+			s(l);s(r);
+			l--;r--;
+			if(a[l]==a[r]){
+				cout<<(r-l+1)<<endl;
+				continue;
+			}
+			int cnt1=cnt[a[l]]+st[a[l]]-l;
+			int k1=st[a[l]]+cnt[a[l]];
+			int k2=st[a[r]];
+			int cnt2=r-st[a[r]]+1;
+			int ans=max(cnt1,cnt2),temp=0;
+			if(k1!=k2)
+			{
+				temp=query(0,0,n-1,k1,k2-1);
+				ans=max(ans,temp);
+			}
+			cout<<ans<<endl;
+		}
+	}
+	
+	return 0;
+}
